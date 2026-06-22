@@ -83,7 +83,7 @@ def get_system_memory_gb() -> float:
 def get_app_version() -> str:
     """Dynamically retrieves the application version from package metadata."""
     try:
-        return version("quaero")
+        return version("quaerite")
     except PackageNotFoundError:
         # Fallback if the package isn't installed in the environment yet (e.g., during raw local testing)
         return "0.1.0-dev"
