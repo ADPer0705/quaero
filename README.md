@@ -78,6 +78,7 @@ Quaero features a modern, Rich-powered CLI.
 
 ## 🏗️ Architecture
 
+```mermaid
 graph TD
     A[Local Filesystem] -->|quaero sync / ingest| B[Tiered Extraction Router]
     B --> C[Memory-Flat Text Splitter]
@@ -89,3 +90,4 @@ graph TD
     E --> H[Context Assembly]
     H --> I[Ollama Inference]
     I --> J[Grounded Terminal Response]
+```

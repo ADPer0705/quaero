@@ -38,6 +38,7 @@ dependencies = [
     "unstructured>=0.23.1",
     "typer>=0.26.7",
     "rich>=15.0.0",
+    "ollama>=0.6.2",
 ]
 
 [project.optional-dependencies]
@@ -60,9 +61,4 @@ where = ["src"]
 [tool.uv.workspace]
 members = [
     "quaero",
-]
-
-[dependency-groups]
-dev = [
-    "ollama>=0.6.1",
 ]
