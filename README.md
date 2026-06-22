@@ -1,306 +1,91 @@
-# Quaero
+# 🔬 Quaero
 
 <div align="center">
-  <h1>🔬 Quaero</h1>
-  <p><strong>Local-first AI-Powered Document Research Assistant</strong></p>
-  <p><em>Transform your documents into an intelligent knowledge base with local RAG technology</em></p>
+  <p><strong>High-Performance, Local-First RAG Document Assistant</strong></p>
+  <p><em>Transform your local documents into an intelligent, queryable knowledge base—without the bloat.</em></p>
   
-  [![Python 3.8+](https://img.shields.io/badge/python-3.8%2B-blue.svg)](https://www.python.org/downloads/)
+  [![Python 3.11+](https://img.shields.io/badge/python-3.11%2B-blue.svg)](https://www.python.org/downloads/)
   [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
-  [![LangChain](https://img.shields.io/badge/LangChain-Ready-orange.svg)](https://langchain.com/)
-  [![Ollama](https://img.shields.io/badge/Ollama-Compatible-purple.svg)](https://ollama.ai/)
+  [![LanceDB](https://img.shields.io/badge/LanceDB-Vector_Store-orange.svg)](https://lancedb.com/)
+  [![Ollama](https://img.shields.io/badge/Ollama-Local_Intelligence-purple.svg)](https://ollama.ai/)
 </div>
 
 ---
 
 ## 🎯 Overview
 
-**Quaero** is a Local-first Retrieval-Augmented Generation (RAG) system that transforms your document collections into an intelligent, queryable knowledge base. Built for researchers, analysts, and knowledge workers who need precise, source-attributed answers from their documents.
+**Quaero** is a streamlined, local-first Retrieval-Augmented Generation (RAG) engine. Built for developers, researchers, and engineers, it completely bypasses heavy frameworks like LangChain in favor of a custom, memory-flat ingestion pipeline and blazing-fast vector search via LanceDB.
 
-Unlike generic AI assistants, Quaero grounds every response in your specific documents, ensuring accuracy, relevance, and complete traceability of information sources.
+Your data never leaves your machine. 
 
-## ✨ Key Features
+## ✨ The Engineering Edge
 
-### 🎯 **Precision & Accuracy**
-- **Document-Grounded Responses**: Every answer is based on your specific documents, not generic training data
-- **Source Attribution**: Complete traceability with exact document and page references
-- **Context-Aware**: Understands document relationships and maintains coherent reasoning
-
-### 🚀 **Professional Performance**
-- **High-Quality Embeddings**: Uses Nomic's state-of-the-art embedding models for semantic understanding
-- **Memory-Optimized Processing**: Batch processing with configurable memory limits for handling large document collections on systems with limited resources
-- **Efficient Vector Search**: FAISS-powered similarity search for instant document retrieval
-- **Optimized Chunking**: Intelligent text segmentation preserves context and meaning
-
-### 🔒 **Privacy & Control**
-- **100% Local Processing**: No data leaves your machine - complete privacy guaranteed
-- **Offline Capable**: Works without internet connection once models are downloaded
-- **Your Data, Your Control**: Full ownership and control of your knowledge base
-
-### 💻 **User Experience**
-- **Multiple Interfaces**: Choose between CLI, TUI, or programmatic API access
-- **Cross-Platform**: Works on Windows, macOS, and Linux
-- **Easy Setup**: Automated dependency management and model installation
-
-## 🏗️ Architecture
-
-```mermaid
-graph TD
-    A[📄 PDF, DOCX & DOC Documents] --> B[🔄 Document Loader]
-    B --> C[✂️ Text Chunking]
-    C --> D[🧠 Embedding Generation]
-    D --> E[🗄️ FAISS Vector Store]
-    
-    F[❓ User Query] --> G[🔍 Semantic Search]
-    G --> E
-    E --> H[📋 Context Retrieval]
-    H --> I[🤖 LLM Processing]
-    I --> J[✅ Grounded Response]
-```
-
-### Core Components
-
-| Component | Technology | Purpose |
-|-----------|------------|---------|
-| **Document Processing** | PyMuPDF & Unstructured | High-fidelity PDF, DOCX, and DOC text extraction |
-| **Text Chunking** | LangChain RecursiveCharacterTextSplitter | Semantic-aware text segmentation |
-| **Embeddings** | Nomic Embed Text | High-quality vector representations |
-| **Vector Database** | FAISS | Efficient similarity search |
-| **Language Model** | Ollama (Configurable) | Local response generation (Default: Dolphin Mistral) |
+- **Tiered Ingestion Router:** Automatically routes files to the most efficient parser (e.g., C-bound `PyMuPDF` for PDFs, native `python-docx` for Word, and raw streaming for code/text) while bouncing binary executables at the door.
+- **Memory-Flat Processing:** Reads and hashes massive files (like 1,000-page textbooks) using lazy generators, keeping your RAM usage practically at zero during ingestion.
+- **State Reconciliation:** Native `sync` tracking detects when you modify or delete a physical file and automatically purges or updates the orphaned vectors via relational metadata.
+- **Zero-Config Vector Search:** Powered by LanceDB's PyArrow backend for native, sub-millisecond Cosine distance retrieval.
 
 ## 🚀 Quick Start
 
 ### Prerequisites
-
-- **Python 3.8+** (Python 3.10+ recommended)
-- **8GB+ RAM** (for optimal performance)
-- **Ollama** installed and running
+- **Python 3.11+**
+- **Ollama** installed and running locally.
 
 ### 1. Installation
-
+Install directly via pip (or `pipx` for isolated environments):
 ```bash
-# Clone the repository
-git clone https://github.com/yourusername/inquiro.git
-cd inquiro
-
-# Create virtual environment (recommended)
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-
-# Install dependencies
-pip install -e .
+pip install quaero
 ```
 
-### 2. Setup Ollama Models
-
-The system is configured to use **Dolphin Mistral** and **Nomic Embed** by default, but you can use any model supported by Ollama.
+### 2. Initial Setup
+Run the interactive wizard to configure your models and chunk sizes:
 
 ```bash
-# Install default models (recommended)
-ollama pull CognitiveComputations/dolphin-mistral:7b  # Default language model
-ollama pull nomic-embed-text                          # Default embedding model
-
-# Verify installation
-ollama list
+quaero setup
 ```
 
-> **Note**: You can change the models by setting `OLLAMA_QUERY_MODEL` and `OLLAMA_EMBEDDING_MODEL` environment variables.
+(We recommend embeddinggemma for embeddings and a fast, instruction-tuned model like gemma or llama3 for inference).
 
-### 3. Setup Your Knowledge Base
+### 3. Build Your Knowledge Base
+Point Quaero at a single file or an entire directory. It will recursively crawl and index supported formats.
 
-By default, Inquiro looks for documents in `~/inquiro/data`.
-
-```bash
-# Create the data directory
-mkdir -p ~/inquiro/data
-
-# Copy your PDF, DOCX, and DOC files to the data directory
-# cp my_docs/*.pdf ~/inquiro/data/
-
-# Build the knowledge base
-python core/populate_database.py
+```Bash
+quaero ingest /path/to/your/documents/
 ```
 
 ### 4. Start Querying
+Launch the interactive terminal UI to chat with your documents:
 
-Choose your preferred interface:
-
-#### Command Line Interface
-```bash
-python inquiro_cli.py
+```Bash
+quaero chat
 ```
 
-#### Terminal User Interface (Recommended)
-```bash
-python inquiro_tui.py
+Or execute a single-shot query:
+
+```Bash
+quaero chat "What are the main persistence mechanisms described in the malware textbook?"
 ```
 
-#### Direct Query
-```bash
-python core/query_data.py "What are the main findings in the research papers?"
-```
+## 💻 CLI Command Reference
 
-## 💡 Usage Examples
+Quaero features a modern, Rich-powered CLI.
+- quaero status - View database health and vector counts.
+- quaero ingest <path> - Ingest a file or directory.
+- quaero sync - Reconcile the vector database with your physical filesystem (purges orphans, updates modifications).
+- quaero config show - Display active thresholds, models, and chunk parameters.
+- quaero config set <KEY> <VALUE> - Tune the engine on the fly (e.g., quaero config set score_threshold 0.6).
+- quaero db reset - Nuke the database and start fresh.
 
-### Research Analysis
-```bash
-# Analyze multiple research papers
-python core/query_data.py "What methodologies were used across the studies?"
-```
+## 🏗️ Architecture
 
-### Document Comparison
-```bash
-# Compare findings across documents
-python core/query_data.py "How do the conclusions differ between paper A and paper B?"
-```
-
-### Fact Extraction
-```bash
-# Extract specific information
-python core/query_data.py "What are the statistical results reported in the studies?"
-```
-
-## 🎯 Use Cases
-
-### 📚 **Academic Research**
-- Literature review and synthesis
-- Cross-paper analysis and comparison
-- Methodology extraction and analysis
-- Citation and reference tracking
-
-### 🏢 **Business Intelligence**
-- Policy document analysis
-- Compliance documentation review
-- Market research synthesis
-- Due diligence document review
-
-### 📖 **Knowledge Management**
-- Technical documentation querying
-- Standard operating procedure lookup
-- Training material synthesis
-- Institutional knowledge preservation
-
-### 🎓 **Education**
-- Course material analysis
-- Curriculum development support
-- Student research assistance
-- Academic writing support
-
-## 📁 Project Structure
-
-```
-inquiro/
-├── 📁 core/              # Core RAG functionality
-│   ├── config.py         # Configuration management
-│   ├── get_embedding.py  # Embedding generation
-│   ├── populate_database.py  # Database population
-│   └── query_data.py     # Query processing
-├── 📁 docs/              # Documentation
-├── 📄 inquiro_cli.py     # Command line interface
-├── 📄 inquiro_tui.py     # Terminal user interface
-├── 📄 pyproject.toml     # Project configuration and dependencies
-├── 📄 Makefile           # Build and maintenance tasks
-└── 📄 README.md          # This file
-```
-
-## 🔧 Configuration
-
-The system uses sensible defaults but can be customized via environment variables.
-
-### Directories
-By default, Inquiro stores data in your home directory (`~/inquiro`). You can override this by setting `INQUIRO_BASE_DIR`.
-
-| Setting | Default | Description |
-|---------|---------|-------------|
-| `INQUIRO_BASE_DIR` | `~/inquiro` | Root directory for application data |
-| `DATA_PATH` | `~/inquiro/data` | Document storage location |
-| `FAISS_PATH` | `~/inquiro/database/faiss_index` | Vector database location |
-
-### Models & Processing
-| Setting | Default | Description |
-|---------|---------|-------------|
-| `OLLAMA_QUERY_MODEL` | `CognitiveComputations/dolphin-mistral:7b` | LLM for generating answers |
-| `OLLAMA_EMBEDDING_MODEL` | `nomic-embed-text` | Model for document embeddings |
-| `CHUNK_SIZE` | `800` | Text chunk size for processing |
-| `CHUNK_OVERLAP` | `50` | Overlap between chunks |
-
-## 🛠️ Development
-
-### Setting up Development Environment
-
-```bash
-# Install development dependencies
-pip install -e .[dev]
-
-# Install pre-commit hooks
-pre-commit install
-
-# Run linting
-black .
-flake8 .
-```
-
-### Contributing
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines.
-
-## 📚 Documentation
-
-- [**Installation Guide**](docs/installation.md) - Detailed setup instructions
-- [**User Manual**](docs/user-guide.md) - Complete usage documentation
-- [**API Reference**](docs/api.md) - Programmatic interface documentation
-- [**Troubleshooting**](docs/troubleshooting.md) - Common issues and solutions
-
-## 🤝 Support
-
-- **Issues**: [GitHub Issues](https://github.com/yourusername/inquiro/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/yourusername/inquiro/discussions)
-- **Documentation**: [Project Wiki](https://github.com/yourusername/inquiro/wiki)
-
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 🙏 Acknowledgments
-
-- **LangChain**: For the excellent RAG framework
-- **Ollama**: For making local LLMs accessible
-- **FAISS**: For efficient vector similarity search
-- **Nomic**: For high-quality embedding models
-
----
-
-<div align="center">
-  <p>Made with ❤️ for researchers and knowledge workers</p>
-  <p>⭐ Star this repo if you find it helpful!</p>
-</div>
-
-## 🛠️ Advanced Usage
-
-### Memory Optimization
-
-For systems with limited memory or when processing large document collections:
-
-```bash
-# Process large document sets with memory optimization
-python core/populate_database.py --optimized-memory --batch-size 500 --memory-limit 8000
-
-# Options explained:
-# --optimized-memory: Use batch processing approach (default)
-# --batch-size: Number of document chunks to process at once (default: 1000)
-# --memory-limit: Memory limit in MB (default: 0 = no limit)
-# --traditional: Use traditional processing (all documents at once)
-```
-
-The memory-optimized processing:
-
-1. Processes one document at a time to minimize peak memory usage
-2. Batches chunks into smaller groups for embedding generation
-3. Monitors system memory and adjusts processing accordingly
-4. Helps prevent out-of-memory errors on systems with limited RAM
+graph TD
+    A[Local Filesystem] -->|quaero sync / ingest| B[Tiered Extraction Router]
+    B --> C[Memory-Flat Text Splitter]
+    C --> D[Ollama Embedding Engine]
+    D --> E[(LanceDB Vector Store)]
+    
+    F[User Query] --> G[Cosine Similarity Search]
+    G --> E
+    E --> H[Context Assembly]
+    H --> I[Ollama Inference]
+    I --> J[Grounded Terminal Response]
