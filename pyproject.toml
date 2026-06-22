@@ -1,0 +1,68 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "quaero"
+version = "0.1.0"
+description = "A high-performance, local-first RAG document assistant."
+readme = "README.md"
+requires-python = ">=3.11"
+license = {text = "MIT"}
+authors = [
+    {name = "ADPer", email = "adper0705@gmail.com"}
+]
+keywords = ["rag", "cli", "lancedb", "vector-search", "ollama", "llm"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Text Processing :: Indexing",
+]
+
+# The absolute bare-minimum required to run the engine core
+dependencies = [
+    "lancedb>=0.6.0",
+    "pydantic>=2.0.0",
+    "platformdirs>=4.0.0",
+    "tomli-w>=1.0.0", # Used exclusively for writing configs (read handled natively via tomllib)
+    "pymupdf>=1.27.2.3",
+    "docx>=0.2.4",
+    "unstructured>=0.23.1",
+    "typer>=0.26.7",
+    "rich>=15.0.0",
+]
+
+[project.optional-dependencies]
+# This cleanly links to our dynamic runtime installation logic
+ollama = ["ollama>=0.1.7"]
+all = ["ollama"]
+
+[project.scripts]
+# This tells the OS to create the 'quaero' terminal command and point it to cli.py
+quaero = "quaero.cli:app"
+
+[project.urls]
+Homepage = "https://github.com/ADPer0705/quaero"
+Repository = "https://github.com/ADPer0705/quaero.git"
+"Bug Tracker" = "https://github.com/ADPer0705/quaero/issues"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.uv.workspace]
+members = [
+    "quaero",
+]
+
+[dependency-groups]
+dev = [
+    "ollama>=0.6.1",
+]

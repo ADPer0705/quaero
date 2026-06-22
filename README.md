@@ -1,0 +1,306 @@
+# Quaero
+
+<div align="center">
+  <h1>🔬 Quaero</h1>
+  <p><strong>Local-first AI-Powered Document Research Assistant</strong></p>
+  <p><em>Transform your documents into an intelligent knowledge base with local RAG technology</em></p>
+  
+  [![Python 3.8+](https://img.shields.io/badge/python-3.8%2B-blue.svg)](https://www.python.org/downloads/)
+  [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
+  [![LangChain](https://img.shields.io/badge/LangChain-Ready-orange.svg)](https://langchain.com/)
+  [![Ollama](https://img.shields.io/badge/Ollama-Compatible-purple.svg)](https://ollama.ai/)
+</div>
+
+---
+
+## 🎯 Overview
+
+**Quaero** is a Local-first Retrieval-Augmented Generation (RAG) system that transforms your document collections into an intelligent, queryable knowledge base. Built for researchers, analysts, and knowledge workers who need precise, source-attributed answers from their documents.
+
+Unlike generic AI assistants, Quaero grounds every response in your specific documents, ensuring accuracy, relevance, and complete traceability of information sources.
+
+## ✨ Key Features
+
+### 🎯 **Precision & Accuracy**
+- **Document-Grounded Responses**: Every answer is based on your specific documents, not generic training data
+- **Source Attribution**: Complete traceability with exact document and page references
+- **Context-Aware**: Understands document relationships and maintains coherent reasoning
+
+### 🚀 **Professional Performance**
+- **High-Quality Embeddings**: Uses Nomic's state-of-the-art embedding models for semantic understanding
+- **Memory-Optimized Processing**: Batch processing with configurable memory limits for handling large document collections on systems with limited resources
+- **Efficient Vector Search**: FAISS-powered similarity search for instant document retrieval
+- **Optimized Chunking**: Intelligent text segmentation preserves context and meaning
+
+### 🔒 **Privacy & Control**
+- **100% Local Processing**: No data leaves your machine - complete privacy guaranteed
+- **Offline Capable**: Works without internet connection once models are downloaded
+- **Your Data, Your Control**: Full ownership and control of your knowledge base
+
+### 💻 **User Experience**
+- **Multiple Interfaces**: Choose between CLI, TUI, or programmatic API access
+- **Cross-Platform**: Works on Windows, macOS, and Linux
+- **Easy Setup**: Automated dependency management and model installation
+
+## 🏗️ Architecture
+
+```mermaid
+graph TD
+    A[📄 PDF, DOCX & DOC Documents] --> B[🔄 Document Loader]
+    B --> C[✂️ Text Chunking]
+    C --> D[🧠 Embedding Generation]
+    D --> E[🗄️ FAISS Vector Store]
+    
+    F[❓ User Query] --> G[🔍 Semantic Search]
+    G --> E
+    E --> H[📋 Context Retrieval]
+    H --> I[🤖 LLM Processing]
+    I --> J[✅ Grounded Response]
+```
+
+### Core Components
+
+| Component | Technology | Purpose |
+|-----------|------------|---------|
+| **Document Processing** | PyMuPDF & Unstructured | High-fidelity PDF, DOCX, and DOC text extraction |
+| **Text Chunking** | LangChain RecursiveCharacterTextSplitter | Semantic-aware text segmentation |
+| **Embeddings** | Nomic Embed Text | High-quality vector representations |
+| **Vector Database** | FAISS | Efficient similarity search |
+| **Language Model** | Ollama (Configurable) | Local response generation (Default: Dolphin Mistral) |
+
+## 🚀 Quick Start
+
+### Prerequisites
+
+- **Python 3.8+** (Python 3.10+ recommended)
+- **8GB+ RAM** (for optimal performance)
+- **Ollama** installed and running
+
+### 1. Installation
+
+```bash
+# Clone the repository
+git clone https://github.com/yourusername/inquiro.git
+cd inquiro
+
+# Create virtual environment (recommended)
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+
+# Install dependencies
+pip install -e .
+```
+
+### 2. Setup Ollama Models
+
+The system is configured to use **Dolphin Mistral** and **Nomic Embed** by default, but you can use any model supported by Ollama.
+
+```bash
+# Install default models (recommended)
+ollama pull CognitiveComputations/dolphin-mistral:7b  # Default language model
+ollama pull nomic-embed-text                          # Default embedding model
+
+# Verify installation
+ollama list
+```
+
+> **Note**: You can change the models by setting `OLLAMA_QUERY_MODEL` and `OLLAMA_EMBEDDING_MODEL` environment variables.
+
+### 3. Setup Your Knowledge Base
+
+By default, Inquiro looks for documents in `~/inquiro/data`.
+
+```bash
+# Create the data directory
+mkdir -p ~/inquiro/data
+
+# Copy your PDF, DOCX, and DOC files to the data directory
+# cp my_docs/*.pdf ~/inquiro/data/
+
+# Build the knowledge base
+python core/populate_database.py
+```
+
+### 4. Start Querying
+
+Choose your preferred interface:
+
+#### Command Line Interface
+```bash
+python inquiro_cli.py
+```
+
+#### Terminal User Interface (Recommended)
+```bash
+python inquiro_tui.py
+```
+
+#### Direct Query
+```bash
+python core/query_data.py "What are the main findings in the research papers?"
+```
+
+## 💡 Usage Examples
+
+### Research Analysis
+```bash
+# Analyze multiple research papers
+python core/query_data.py "What methodologies were used across the studies?"
+```
+
+### Document Comparison
+```bash
+# Compare findings across documents
+python core/query_data.py "How do the conclusions differ between paper A and paper B?"
+```
+
+### Fact Extraction
+```bash
+# Extract specific information
+python core/query_data.py "What are the statistical results reported in the studies?"
+```
+
+## 🎯 Use Cases
+
+### 📚 **Academic Research**
+- Literature review and synthesis
+- Cross-paper analysis and comparison
+- Methodology extraction and analysis
+- Citation and reference tracking
+
+### 🏢 **Business Intelligence**
+- Policy document analysis
+- Compliance documentation review
+- Market research synthesis
+- Due diligence document review
+
+### 📖 **Knowledge Management**
+- Technical documentation querying
+- Standard operating procedure lookup
+- Training material synthesis
+- Institutional knowledge preservation
+
+### 🎓 **Education**
+- Course material analysis
+- Curriculum development support
+- Student research assistance
+- Academic writing support
+
+## 📁 Project Structure
+
+```
+inquiro/
+├── 📁 core/              # Core RAG functionality
+│   ├── config.py         # Configuration management
+│   ├── get_embedding.py  # Embedding generation
+│   ├── populate_database.py  # Database population
+│   └── query_data.py     # Query processing
+├── 📁 docs/              # Documentation
+├── 📄 inquiro_cli.py     # Command line interface
+├── 📄 inquiro_tui.py     # Terminal user interface
+├── 📄 pyproject.toml     # Project configuration and dependencies
+├── 📄 Makefile           # Build and maintenance tasks
+└── 📄 README.md          # This file
+```
+
+## 🔧 Configuration
+
+The system uses sensible defaults but can be customized via environment variables.
+
+### Directories
+By default, Inquiro stores data in your home directory (`~/inquiro`). You can override this by setting `INQUIRO_BASE_DIR`.
+
+| Setting | Default | Description |
+|---------|---------|-------------|
+| `INQUIRO_BASE_DIR` | `~/inquiro` | Root directory for application data |
+| `DATA_PATH` | `~/inquiro/data` | Document storage location |
+| `FAISS_PATH` | `~/inquiro/database/faiss_index` | Vector database location |
+
+### Models & Processing
+| Setting | Default | Description |
+|---------|---------|-------------|
+| `OLLAMA_QUERY_MODEL` | `CognitiveComputations/dolphin-mistral:7b` | LLM for generating answers |
+| `OLLAMA_EMBEDDING_MODEL` | `nomic-embed-text` | Model for document embeddings |
+| `CHUNK_SIZE` | `800` | Text chunk size for processing |
+| `CHUNK_OVERLAP` | `50` | Overlap between chunks |
+
+## 🛠️ Development
+
+### Setting up Development Environment
+
+```bash
+# Install development dependencies
+pip install -e .[dev]
+
+# Install pre-commit hooks
+pre-commit install
+
+# Run linting
+black .
+flake8 .
+```
+
+### Contributing
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines.
+
+## 📚 Documentation
+
+- [**Installation Guide**](docs/installation.md) - Detailed setup instructions
+- [**User Manual**](docs/user-guide.md) - Complete usage documentation
+- [**API Reference**](docs/api.md) - Programmatic interface documentation
+- [**Troubleshooting**](docs/troubleshooting.md) - Common issues and solutions
+
+## 🤝 Support
+
+- **Issues**: [GitHub Issues](https://github.com/yourusername/inquiro/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/yourusername/inquiro/discussions)
+- **Documentation**: [Project Wiki](https://github.com/yourusername/inquiro/wiki)
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🙏 Acknowledgments
+
+- **LangChain**: For the excellent RAG framework
+- **Ollama**: For making local LLMs accessible
+- **FAISS**: For efficient vector similarity search
+- **Nomic**: For high-quality embedding models
+
+---
+
+<div align="center">
+  <p>Made with ❤️ for researchers and knowledge workers</p>
+  <p>⭐ Star this repo if you find it helpful!</p>
+</div>
+
+## 🛠️ Advanced Usage
+
+### Memory Optimization
+
+For systems with limited memory or when processing large document collections:
+
+```bash
+# Process large document sets with memory optimization
+python core/populate_database.py --optimized-memory --batch-size 500 --memory-limit 8000
+
+# Options explained:
+# --optimized-memory: Use batch processing approach (default)
+# --batch-size: Number of document chunks to process at once (default: 1000)
+# --memory-limit: Memory limit in MB (default: 0 = no limit)
+# --traditional: Use traditional processing (all documents at once)
+```
+
+The memory-optimized processing:
+
+1. Processes one document at a time to minimize peak memory usage
+2. Batches chunks into smaller groups for embedding generation
+3. Monitors system memory and adjusts processing accordingly
+4. Helps prevent out-of-memory errors on systems with limited RAM
